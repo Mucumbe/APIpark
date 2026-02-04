@@ -35,7 +35,7 @@ public class UsuarioController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updatePassWord(@PathVariable Long id, @RequestBody UsuarioSenhaDTO senhaDTO) {
+    public ResponseEntity<Void> updatePassWord(@PathVariable Long id,@Valid @RequestBody UsuarioSenhaDTO senhaDTO) {
         Usuario user = usuarioService.actualizarPassWord(id, senhaDTO.getActual(),senhaDTO.getNova(),senhaDTO.getConfirmacao());
         return ResponseEntity.noContent().build();
     }
