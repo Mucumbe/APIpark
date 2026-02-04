@@ -27,15 +27,22 @@ public class UsuarioService {
                 () -> new RuntimeException("Usuario não encontrado")
         );
     }
+
     @Transactional
-    public Usuario actualizarPassWord(Long id, String passWord) {
-        Usuario usuario=buscarPorId(id);
-        usuario.setPassWord(passWord);
+    public Usuario actualizarPassWord(Long id, String actual, String nova, String confirmacao) {
+        if (!nova.equals(confirmacao))
+            throw new RuntimeException("As senha nova nao confere com a senha de confirmacao");
+
+        Usuario usuario = buscarPorId(id);
+        if (!actual.equals(usuario.getPassWord()))
+            throw new RuntimeException("Senha actual nao coresponde");
+
+        usuario.setPassWord(nova);
         return usuario;
     }
 
     public List<Usuario> buscarTodos() {
-        List <Usuario> usuarios=usuarioRepository.findAll();
+        List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios;
     }
 }
