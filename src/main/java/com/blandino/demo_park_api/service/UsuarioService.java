@@ -1,8 +1,10 @@
 package com.blandino.demo_park_api.service;
 
 import com.blandino.demo_park_api.entity.Usuario;
+import com.blandino.demo_park_api.exception.UsernmaeUniqueVioletionException;
 import com.blandino.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,7 +19,12 @@ public class UsuarioService {
     @Transactional
     public Usuario salvar(Usuario usuario) {
 
-        return usuarioRepository.save(usuario);
+       try {
+           return usuarioRepository.save(usuario);
+       }catch (DataIntegrityViolationException ex){
+           throw new UsernmaeUniqueVioletionException(String.format("Usuario %s ja esta cadastrado",usuario.getUserName()));
+       }
+
     }
 
     @Transactional(readOnly = true)
