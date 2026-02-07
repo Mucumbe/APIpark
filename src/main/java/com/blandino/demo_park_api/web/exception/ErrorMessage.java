@@ -31,6 +31,9 @@ public class ErrorMessage {
 
     }
 
+    public ErrorMessage() {
+    }
+
     public ErrorMessage(HttpServletRequest request, HttpStatus status, String message, BindingResult result) {
 
         this.path=request.getRequestURI();
