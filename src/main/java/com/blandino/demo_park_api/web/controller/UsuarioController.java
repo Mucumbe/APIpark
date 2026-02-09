@@ -30,12 +30,12 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
 
     @Operation(summary = "Criado um novo Usuario", responses = {
-            @ApiResponse(responseCode = "201", description = "Usuario criado com sucesso",
+            @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioCreateDto.class))),
             @ApiResponse(responseCode = "409", description = "Usuario ou email ja cadastrado no sistema",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "422", description = "Recurso nao processado devido a dados de entrada invalidos",
-                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErrorMessage.class)))
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
     })
     @PostMapping
     public ResponseEntity<UsuarioResponseDto> create(@Valid @RequestBody UsuarioCreateDto usuario) {
@@ -44,6 +44,13 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDTO(user));
     }
 
+
+    @Operation(summary = "Buscar Usuario", responses = {
+            @ApiResponse(responseCode = "200",description = "Recurso encontrado com sucesso",
+                    content = @Content(mediaType = "application/json",schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse(responseCode = "404",description = "Recurso nao encontrado",
+            content = @Content(mediaType = "application/json",schema = @Schema(implementation = ErrorMessage.class)))
+    })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> findById(@PathVariable Long id) {
         Usuario usuario = usuarioService.buscarPorId(id);
