@@ -57,6 +57,15 @@ public class UsuarioController {
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuario));
     }
 
+
+    @Operation(summary = "Actualizado senha de um recurso", responses = {
+            @ApiResponse(responseCode ="204", description = "Senha actualizada",
+            content = @Content(mediaType = "application/json",schema = @Schema(implementation =Void.class ))),
+            @ApiResponse(responseCode ="400", description = "Senha nao confere",
+                    content = @Content(mediaType ="application/json",schema = @Schema(implementation =ErrorMessage.class)) ),
+            @ApiResponse(responseCode ="404", description = "Nova nao confere com confirmacao",
+                    content = @Content(mediaType ="application/json",schema = @Schema(implementation =ErrorMessage.class)) )
+    })
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassWord(@PathVariable Long id, @Valid @RequestBody UsuarioSenhaDTO senhaDTO) {
         Usuario user = usuarioService.actualizarPassWord(id, senhaDTO.getActual(), senhaDTO.getNova(), senhaDTO.getConfirmacao());
