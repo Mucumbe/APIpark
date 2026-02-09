@@ -29,7 +29,7 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    @Operation(summary = "Criado um novo Usuario", responses = {
+    @Operation(summary = "Criado um novo Usuario",description = "Responsavel por criar u novo recurso", responses = {
             @ApiResponse(responseCode = "201", description = "Recurso criado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioCreateDto.class))),
             @ApiResponse(responseCode = "409", description = "Usuario ou email ja cadastrado no sistema",
@@ -45,7 +45,7 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Buscar Usuario", responses = {
+    @Operation(summary = "Buscar Usuario",description = "Responsavel procurar um recursos especifico", responses = {
             @ApiResponse(responseCode = "200",description = "Recurso encontrado com sucesso",
                     content = @Content(mediaType = "application/json",schema = @Schema(implementation = UsuarioResponseDto.class))),
             @ApiResponse(responseCode = "404",description = "Recurso nao encontrado",
@@ -58,12 +58,12 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Actualizado senha de um recurso", responses = {
+    @Operation(summary = "Actualizado senha de um recurso",description = "Actualiza senha de um usuario ja exstente", responses = {
             @ApiResponse(responseCode ="204", description = "Senha actualizada",
             content = @Content(mediaType = "application/json",schema = @Schema(implementation =Void.class ))),
             @ApiResponse(responseCode ="400", description = "Senha nao confere",
                     content = @Content(mediaType ="application/json",schema = @Schema(implementation =ErrorMessage.class)) ),
-            @ApiResponse(responseCode ="404", description = "Nova nao confere com confirmacao",
+            @ApiResponse(responseCode ="404", description = "Novasenha nao confere com confirmacao",
                     content = @Content(mediaType ="application/json",schema = @Schema(implementation =ErrorMessage.class)) )
     })
     @PatchMapping("/{id}")
@@ -72,6 +72,11 @@ public class UsuarioController {
         return ResponseEntity.noContent().build();
     }
 
+
+    @Operation(summary = "Listar todos Recursos", description = "Listar todos os recurso cadastrados",responses = {
+            @ApiResponse(responseCode ="200", description = "Lista todos Recursos",
+                    content = @Content(mediaType ="application/json",schema = @Schema(implementation =UsuarioResponseDto.class)) )
+    })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
         List<Usuario> usuarios = usuarioService.buscarTodos();
