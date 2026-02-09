@@ -1,6 +1,7 @@
 package com.blandino.demo_park_api.service;
 
 import com.blandino.demo_park_api.entity.Usuario;
+import com.blandino.demo_park_api.exception.EntityNotFoundException;
 import com.blandino.demo_park_api.exception.UsernmaeUniqueVioletionException;
 import com.blandino.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class UsuarioService {
     public Usuario buscarPorId(Long id) {
 
         return usuarioRepository.findById(id).orElseThrow(
-                () -> new RuntimeException("Usuario não encontrado")
+                () -> new EntityNotFoundException(String.format("ID : %s não encontrado",id))
         );
     }
 
