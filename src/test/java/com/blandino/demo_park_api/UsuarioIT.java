@@ -141,4 +141,36 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(409);
 
     }
+
+    @Test
+    public void findByisteUsuario_PesquisarIdDeUmUsuario_retornando_UsuarioComStatus200() {
+        UsuarioResponseDto responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios/100")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(100);
+
+    }
+
+
+    @Test
+    public void findByisteUsuario_idUsuarioInvalido() {
+        ErrorMessage responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios/140")
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
 }
