@@ -215,6 +215,18 @@ public class UsuarioIT {
                 .returnResult().getResponseBody();
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(400);
+
+        responseDto = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456780"))
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(400);
     }
 
 
