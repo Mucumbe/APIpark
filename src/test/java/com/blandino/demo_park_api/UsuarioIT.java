@@ -4,6 +4,7 @@ package com.blandino.demo_park_api;
 import com.blandino.demo_park_api.web.controller.UsuarioController;
 import com.blandino.demo_park_api.web.dto.UsuarioCreateDto;
 import com.blandino.demo_park_api.web.dto.UsuarioResponseDto;
+import com.blandino.demo_park_api.web.dto.UsuarioSenhaDTO;
 import com.blandino.demo_park_api.web.exception.ErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -172,5 +173,35 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
+
+
+    @Test
+    public void actualizacaodasenha_comIdValido_retornadoStatusS204() {
+        testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
+                .exchange()
+                .expectStatus().isNoContent();
+
+    }
+
+    @Test
+    public void actualizacaodasenha_comIdInValido_retornadoStatus404() {
+        ErrorMessage responseDto = testClient
+                .patch()
+                .uri("/api/v1/usuarios/109")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(404)
+        ;
+    }
+
+
 
 }
