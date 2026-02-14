@@ -1,6 +1,7 @@
 package com.blandino.demo_park_api;
 
 
+import com.blandino.demo_park_api.repository.UsuarioRepository;
 import com.blandino.demo_park_api.web.controller.UsuarioController;
 import com.blandino.demo_park_api.web.dto.UsuarioCreateDto;
 import com.blandino.demo_park_api.web.dto.UsuarioResponseDto;
@@ -17,6 +18,8 @@ import org.springframework.test.context.jdbc.Sql;
 
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.List;
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -24,6 +27,9 @@ public class UsuarioIT {
 
 
     WebTestClient testClient;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @LocalServerPort
     int port;
@@ -227,6 +233,23 @@ public class UsuarioIT {
                 .returnResult().getResponseBody();
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(400);
+    }
+
+    @Test
+    public void listarUsuarios_retornadoUsuarioComStatus201() {
+
+        int qty= (int) usuarioRepository.count();
+        List<UsuarioResponseDto> responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios")
+                .exchange()
+                .expectStatus().isOk()
+                .expectBodyList(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat( responseDto.size()).isEqualTo(qty);
+
+
     }
 
 
