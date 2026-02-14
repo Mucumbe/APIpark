@@ -202,6 +202,21 @@ public class UsuarioIT {
         ;
     }
 
+    @Test
+    public void actualizacaodasenha_SenhasNaoCorespondete_retornadoStatus404() {
+        ErrorMessage responseDto = testClient
+                .patch()
+                .uri("/api/v1/usuarios/100")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDTO("12345678","123456789","123456789"))
+                .exchange()
+                .expectStatus().isEqualTo(400)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(400);
+    }
+
 
 
 }
