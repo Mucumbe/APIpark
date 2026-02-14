@@ -54,7 +54,6 @@ public class UsuarioIT {
     }
 
 
-
     @Test
     public void getCreateUsuario_comUsernameInvalido_retornando_UsuarioComStatus422() {
         ErrorMessage responseDto= testClient
@@ -123,6 +122,23 @@ public class UsuarioIT {
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(422);
 
+
+    }
+
+    @Test
+    public void getCreateUsuario_UsuarioExistente_retornando_UsuarioComStatus409() {
+        ErrorMessage responseDto = testClient
+                .post()
+                .uri("/api/v1/usuarios")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioCreateDto("boas@kk.co", "123456"))
+                .exchange()
+                .expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(409);
 
     }
 }
