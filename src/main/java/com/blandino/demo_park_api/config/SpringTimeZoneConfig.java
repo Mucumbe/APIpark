@@ -9,7 +9,7 @@ import java.util.TimeZone;
 public class SpringTimeZoneConfig {
 
     @PostConstruct
-    public void timeZoneConfig(){
+    public void timeZoneConfig() {
         TimeZone.setDefault(TimeZone.getTimeZone("Africa/Maputo"));
     }
 }

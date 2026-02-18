@@ -9,7 +9,6 @@ import org.modelmapper.PropertyMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public class UsuarioMapper {
 
     public static Usuario toUsuario(UsuarioCreateDto usuarioCreateDto) {
@@ -34,7 +33,7 @@ public class UsuarioMapper {
 
     public static List<UsuarioResponseDto> toListDto(List<Usuario> usuarios) {
 
-        return usuarios.stream().map(x->toDTO(x)).collect(Collectors.toList());
+        return usuarios.stream().map(x -> toDTO(x)).collect(Collectors.toList());
 
     }
 }
