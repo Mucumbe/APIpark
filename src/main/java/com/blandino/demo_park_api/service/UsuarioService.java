@@ -7,6 +7,7 @@ import com.blandino.demo_park_api.exception.UsernmaeUniqueVioletionException;
 import com.blandino.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,7 +37,6 @@ public class UsuarioService {
                 () -> new EntityNotFoundException(String.format("ID : %s não encontrado", id))
         );
     }
-
     @Transactional
     public Usuario actualizarPassWord(Long id, String actual, String nova, String confirmacao) {
         if (!nova.equals(confirmacao))
@@ -53,5 +53,19 @@ public class UsuarioService {
     public List<Usuario> buscarTodos() {
         List<Usuario> usuarios = usuarioRepository.findAll();
         return usuarios;
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario buscandiPorNome(String username) {
+        Usuario usuario=usuarioRepository.findByUserName(username).orElseThrow(
+                ()-> new EntityNotFoundException( String.format("Usuario : 'username' Não encontrado",username))
+        );
+        return usuario;
+    }
+
+    @Transactional(readOnly = true)
+    public Usuario.Role buscandoRolePorNome(String username) {
+
+        return usuarioRepository.findRoleByUsername(username);
     }
 }
