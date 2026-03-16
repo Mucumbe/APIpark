@@ -8,6 +8,7 @@ import com.blandino.demo_park_api.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,11 +19,14 @@ import java.util.List;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
+    private final PasswordEncoder passwordEncoder;
+
 
     @Transactional
     public Usuario salvar(Usuario usuario) {
 
         try {
+            usuario.setPassWord(passwordEncoder.encode(usuario.getPassWord()));
             return usuarioRepository.save(usuario);
         } catch (DataIntegrityViolationException ex) {
             throw new UsernmaeUniqueVioletionException(String.format("Usuario %s ja esta cadastrado", usuario.getUserName()));
@@ -43,10 +47,10 @@ public class UsuarioService {
             throw new PasswordInvalidException("Nova senha não confere com confirmação de senha.");
 
         Usuario usuario = buscarPorId(id);
-        if (!actual.equals(usuario.getPassWord()))
+        if (!passwordEncoder.matches(actual,usuario.getPassWord()))
             throw new PasswordInvalidException("Senha actual não confere");
 
-        usuario.setPassWord(nova);
+        usuario.setPassWord(passwordEncoder.encode(nova));
         return usuario;
     }
 
@@ -65,7 +69,6 @@ public class UsuarioService {
 
     @Transactional(readOnly = true)
     public Usuario.Role buscandoRolePorNome(String username) {
-
         return usuarioRepository.findRoleByUsername(username);
     }
 }
