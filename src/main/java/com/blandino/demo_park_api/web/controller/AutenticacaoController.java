@@ -27,19 +27,19 @@ public class AutenticacaoController {
     private final AuthenticationManager authenticationManager;
     private final JwtUserDetailsService jwtUserDetailsService;
 
-    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto usuario, HttpServletRequest request){
-log.error("processo de autenticacao pelo Login {}",usuario.getUserName());
+    public ResponseEntity<?> autenticar(@RequestBody @Valid UsuarioLoginDto usuario, HttpServletRequest request) {
+        log.error("processo de autenticacao pelo Login {}", usuario.getUserName());
         try {
-            UsernamePasswordAuthenticationToken authenticationToken=
-                    new UsernamePasswordAuthenticationToken(usuario.getUserName(),usuario.getPassWord());
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(usuario.getUserName(), usuario.getPassWord());
             authenticationManager.authenticate(authenticationToken);
-            JwtToken token=jwtUserDetailsService.getTokenAuthenticated(usuario.getUserName());
+            JwtToken token = jwtUserDetailsService.getTokenAuthenticated(usuario.getUserName());
             return ResponseEntity.ok(token);
 
         } catch (AuthenticationException ex) {
-           log.error("Bad Credencial From User '{}'",usuario.getUserName());
+            log.error("Bad Credencial From User '{}'", usuario.getUserName());
         }
-return  ResponseEntity.badRequest().body(new ErrorMessage(request, HttpStatus.BAD_REQUEST,"Credenciais Invalidas"));
+        return ResponseEntity.badRequest().body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais Invalidas"));
     }
 
 }
