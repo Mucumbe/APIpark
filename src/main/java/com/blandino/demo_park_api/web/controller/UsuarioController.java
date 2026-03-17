@@ -15,12 +15,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jdk.jfr.ContentType;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @Tag(name = "Usuarios", description = "Contem toda as informacoes relativas aos recrsos de cadastro, leitura e edicao de usuarios")
 @RestController
 @RequiredArgsConstructor
@@ -53,6 +55,7 @@ public class UsuarioController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> findById(@PathVariable Long id) {
+        log.error("boas");
         Usuario usuario = usuarioService.buscarPorId(id);
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuario));
     }
@@ -79,7 +82,9 @@ public class UsuarioController {
     })
     @GetMapping
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
+        log.info("Controller GET /usuarios foi chamado");
         List<Usuario> usuarios = usuarioService.buscarTodos();
+        log.error("Boas na boa"+usuarios.toString());
         return ResponseEntity.ok(UsuarioMapper.toListDto(usuarios));
     }
 

@@ -32,18 +32,19 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         final String token=request.getHeader(JwtUtils.JWT_AUTHORIZATION);
         if (token==null || !token.startsWith(JwtUtils.JWT_BEARER))
         {
-            log.info("O toke esta nulo, vazio ou nao contem Bearer!");
+            log.info("1 O toke esta nulo, vazio ou nao contem Bearer!");
             Usuario usuario = new Usuario();
             filterChain.doFilter(request,response);
             return;
         }
         if (!JwtUtils.isTokenValid(token)){
-            log.warn("O Token é invalido ou esta expirado");
+            log.warn("2 O Token é invalido ou esta expirado");
             filterChain.doFilter(request,response);
             return;
         }
         String userName = JwtUtils.getUsernameFromToken(token);
         toAuthentication(request,userName);
+        filterChain.doFilter(request,response);
     }
 
     private void toAuthentication(HttpServletRequest request, String userName) {

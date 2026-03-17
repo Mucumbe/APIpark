@@ -14,16 +14,17 @@ public class JwtUserDetails extends User {
 
     public JwtUserDetails(Usuario usuario) {
         super(usuario.getUserName(), usuario.getPassWord(), AuthorityUtils.createAuthorityList(usuario.getRole().name()));
-
         this.usuario=usuario;
-
     }
 
     public Long getId(){
+
         return this.usuario.getId();
+
     }
 
     public String getRole(){
+
         return  this.usuario.getRole().name();
     }
 }
