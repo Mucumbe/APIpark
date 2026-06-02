@@ -55,7 +55,6 @@ public class UsuarioController {
     })
     @GetMapping("/{id}")
     public ResponseEntity<UsuarioResponseDto> findById(@PathVariable Long id) {
-        log.error("boas");
         Usuario usuario = usuarioService.buscarPorId(id);
         return ResponseEntity.ok(UsuarioMapper.toDTO(usuario));
     }
