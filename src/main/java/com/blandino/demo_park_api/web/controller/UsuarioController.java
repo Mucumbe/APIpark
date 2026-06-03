@@ -83,6 +83,7 @@ public class UsuarioController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class)))
     })
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
         log.info("Controller GET /usuarios foi chamado");
         List<Usuario> usuarios = usuarioService.buscarTodos();
