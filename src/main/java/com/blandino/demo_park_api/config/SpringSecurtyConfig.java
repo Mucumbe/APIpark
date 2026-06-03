@@ -1,5 +1,6 @@
 package com.blandino.demo_park_api.config;
 
+import com.blandino.demo_park_api.jwt.JwtAuthenticationEntryPoint;
 import com.blandino.demo_park_api.jwt.JwtAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,8 @@ public class SpringSecurtyConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                ).exceptionHandling(ex->
+                        ex.authenticationEntryPoint(new JwtAuthenticationEntryPoint())
                 ).build();
 
     }
