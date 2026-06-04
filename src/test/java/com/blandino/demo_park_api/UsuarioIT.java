@@ -195,13 +195,31 @@ public class UsuarioIT {
         ErrorMessage responseDto = testClient
                 .get()
                 .uri("/api/v1/usuarios/140")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody(ErrorMessage.class)
                 .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(HttpStatus.NOT_FOUND);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(404);
+
+    }
+
+
+    @Test
+    public void findUser_UserFinfUser_403() {
+        ErrorMessage responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios/102")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(403);
 
     }
 
@@ -222,6 +240,7 @@ public class UsuarioIT {
         ErrorMessage responseDto = testClient
                 .patch()
                 .uri("/api/v1/usuarios/109")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
                 .exchange()
