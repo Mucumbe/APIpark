@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jdk.jfr.ContentType;
@@ -48,12 +49,16 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Buscar Usuario", description = "Responsavel procurar um recursos especifico", responses = {
-            @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
-            @ApiResponse(responseCode = "404", description = "Recurso nao encontrado",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
-    })
+    @Operation(summary = "Buscar Usuario", description = "Responsavel procurar um recursos especifico",
+            security = @SecurityRequirement(name = "securiry"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Usuario sem permisao para acessar este recurso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "404", description = "Recurso nao encontrado",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN') OR (hasRole('CLIENTE') AND #id == authentication.principal.id )")
     public ResponseEntity<UsuarioResponseDto> findById(@PathVariable Long id) {
@@ -62,14 +67,18 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Actualizado senha de um recurso", description = "Actualiza senha de um usuario ja exstente", responses = {
-            @ApiResponse(responseCode = "204", description = "Senha actualizada",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
-            @ApiResponse(responseCode = "400", description = "Senha nao confere",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse(responseCode = "404", description = "Novasenha nao confere com confirmacao",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
-    })
+    @Operation(summary = "Actualizado senha de um recurso", description = "Actualiza senha de um usuario ja exstente",
+            security = @SecurityRequirement(name = "securiry"),
+            responses = {
+                    @ApiResponse(responseCode = "204", description = "Senha actualizada",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "403", description = "Usuario sem permisao para acessar este recurso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "400", description = "Senha nao confere",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+                    @ApiResponse(responseCode = "404", description = "Novasenha nao confere com confirmacao",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
     @PatchMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN','CLIENTE') AND #id == authentication.principal.id")
     public ResponseEntity<Void> updatePassWord(@PathVariable Long id, @Valid @RequestBody UsuarioSenhaDTO senhaDTO) {
@@ -78,16 +87,20 @@ public class UsuarioController {
     }
 
 
-    @Operation(summary = "Listar todos Recursos", description = "Listar todos os recurso cadastrados", responses = {
-            @ApiResponse(responseCode = "200", description = "Lista todos Recursos",
-                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class)))
-    })
+    @Operation(summary = "Listar todos Recursos", description = "Listar todos os recurso cadastrados",
+            security = @SecurityRequirement(name = "securiry"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Lista todos Recursos",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Usuario sem permisao para acessar este recurso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class)))
+            })
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
         log.info("Controller GET /usuarios foi chamado");
         List<Usuario> usuarios = usuarioService.buscarTodos();
-        log.error("Boas na boa"+usuarios.toString());
+        log.error("Boas na boa" + usuarios.toString());
         return ResponseEntity.ok(UsuarioMapper.toListDto(usuarios));
     }
 
