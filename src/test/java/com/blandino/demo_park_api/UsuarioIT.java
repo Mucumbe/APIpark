@@ -228,7 +228,18 @@ public class UsuarioIT {
     public void actualizacaodasenha_comIdValido_retornadoStatusS204() {
         testClient
                 .patch()
+                .uri("/api/v1/usuarios/101")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
+                .exchange()
+                .expectStatus().isNoContent();
+
+        testClient
+                .patch()
                 .uri("/api/v1/usuarios/100")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
                 .exchange()
                 .expectStatus().isNoContent();
@@ -236,27 +247,41 @@ public class UsuarioIT {
     }
 
     @Test
-    public void actualizacaodasenha_comIdInValido_retornadoStatus404() {
+    public void actualizacaodasenha_comIdnao_corespondente_aoUsuario403() {
         ErrorMessage responseDto = testClient
                 .patch()
-                .uri("/api/v1/usuarios/109")
+                .uri("/api/v1/usuarios/100")
                 .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isForbidden()
                 .expectBody(ErrorMessage.class)
                 .returnResult().getResponseBody();
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
-        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(404)
-        ;
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(403);
+
+        responseDto = testClient
+                .patch()
+                .uri("/api/v1/usuarios/101")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456789"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(403);
+
     }
 
     @Test
-    public void actualizacaodasenha_SenhasNaoCorespondete_retornadoStatus404() {
+    public void actualizacaodasenha_SenhasNaoCorespondete_retornadoStatus400() {
         ErrorMessage responseDto = testClient
                 .patch()
-                .uri("/api/v1/usuarios/100")
+                .uri("/api/v1/usuarios/101")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDTO("12345678","123456789","123456789"))
                 .exchange()
@@ -268,7 +293,8 @@ public class UsuarioIT {
 
         responseDto = testClient
                 .patch()
-                .uri("/api/v1/usuarios/100")
+                .uri("/api/v1/usuarios/101")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioSenhaDTO("123456789","123456789","123456780"))
                 .exchange()

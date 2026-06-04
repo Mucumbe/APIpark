@@ -70,13 +70,12 @@ public class UsuarioController {
     @Operation(summary = "Actualizado senha de um recurso", description = "Actualiza senha de um usuario ja exstente",
             security = @SecurityRequirement(name = "securiry"),
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Senha actualizada",
-                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+                    @ApiResponse(responseCode = "204", description = "Senha actualizada"),
                     @ApiResponse(responseCode = "403", description = "Usuario sem permisao para acessar este recurso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
                     @ApiResponse(responseCode = "400", description = "Senha nao confere",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-                    @ApiResponse(responseCode = "404", description = "Novasenha nao confere com confirmacao",
+                    @ApiResponse(responseCode = "422", description = "Campos Ivalidos ou mal Formatados",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
             })
     @PatchMapping("/{id}")
