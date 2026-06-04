@@ -316,12 +316,29 @@ public class UsuarioIT {
         List<UsuarioResponseDto> responseDto = testClient
                 .get()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBodyList(UsuarioResponseDto.class)
                 .returnResult().getResponseBody();
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat( responseDto.size()).isEqualTo(qty);
+    }
+
+    @Test
+    public void listarUsuariosSemPermisao() {
+
+        //int qty= (int) usuarioRepository.count();
+        ErrorMessage responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isForbidden()
+                .expectBody (ErrorMessage.class)
+                .returnResult().getResponseBody();
+        //org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        //org.assertj.core.api.Assertions.assertThat( responseDto.size()).isEqualTo(qty);
     }
 
 
