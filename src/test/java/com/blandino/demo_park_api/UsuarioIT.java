@@ -2,7 +2,6 @@ package com.blandino.demo_park_api;
 
 
 import com.blandino.demo_park_api.repository.UsuarioRepository;
-import com.blandino.demo_park_api.web.controller.UsuarioController;
 import com.blandino.demo_park_api.web.dto.UsuarioCreateDto;
 import com.blandino.demo_park_api.web.dto.UsuarioResponseDto;
 import com.blandino.demo_park_api.web.dto.UsuarioSenhaDTO;
@@ -128,8 +127,6 @@ public class UsuarioIT {
 
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseDto.getStatus()).isEqualTo(422);
-
-
     }
 
     @Test
@@ -153,7 +150,22 @@ public class UsuarioIT {
     public void findByisteUsuario_PesquisarIdDeUmUsuario_retornando_UsuarioComStatus200() {
         UsuarioResponseDto responseDto = testClient
                 .get()
+                .uri("/api/v1/usuarios/101")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(101);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUserName()).isEqualTo("boas@kk.co");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("ADMIN");
+
+        responseDto = testClient
+                .get()
                 .uri("/api/v1/usuarios/100")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(UsuarioResponseDto.class)
@@ -161,10 +173,23 @@ public class UsuarioIT {
 
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(100);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUserName()).isEqualTo("bland@kk.co");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("CLIENTE");
 
+         responseDto = testClient
+                .get()
+                .uri("/api/v1/usuarios/100")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody(UsuarioResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(100);
+        org.assertj.core.api.Assertions.assertThat(responseDto.getUserName()).isEqualTo("bland@kk.co");
+        org.assertj.core.api.Assertions.assertThat(responseDto.getRole()).isEqualTo("CLIENTE");
     }
-
-
     @Test
     public void findByisteUsuario_idUsuarioInvalido() {
         ErrorMessage responseDto = testClient
@@ -248,8 +273,6 @@ public class UsuarioIT {
                 .returnResult().getResponseBody();
         org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
         org.assertj.core.api.Assertions.assertThat( responseDto.size()).isEqualTo(qty);
-
-
     }
 
 
