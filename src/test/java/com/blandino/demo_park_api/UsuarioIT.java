@@ -65,6 +65,7 @@ public class UsuarioIT {
         ErrorMessage responseDto= testClient
                 .post()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioCreateDto("","123456789"))
                 .exchange()
@@ -77,6 +78,7 @@ public class UsuarioIT {
         responseDto= testClient
                 .post()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioCreateDto("wendy@","123456789"))
                 .exchange()
@@ -89,6 +91,7 @@ public class UsuarioIT {
         responseDto= testClient
                 .post()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioCreateDto("wendy@email","123456789"))
                 .exchange()
@@ -105,6 +108,7 @@ public class UsuarioIT {
         ErrorMessage responseDto = testClient
                 .post()
                 .uri("/api/v1/usuarios")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .bodyValue(new UsuarioCreateDto("wendy@gmail.com", "1234"))
                 .exchange()
