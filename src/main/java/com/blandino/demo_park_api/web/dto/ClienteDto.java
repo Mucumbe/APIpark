@@ -17,6 +17,7 @@ public class ClienteDto {
     private String nome;
 
     @Size(min =5 ,max =9 )
+
     private String nuit;
 
 }

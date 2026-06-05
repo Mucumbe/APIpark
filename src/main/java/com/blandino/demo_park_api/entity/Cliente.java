@@ -26,7 +26,7 @@ public class Cliente {
     @Column(name = "nome",nullable = false,length = 50)
     private String nome;
 
-    @Column(name = "nuit",nullable = false,length = 9)
+    @Column(name = "nuit",nullable = false,length = 9, unique = true)
     private String nuit ;
 
     @OneToOne

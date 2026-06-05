@@ -2,6 +2,7 @@ package com.blandino.demo_park_api.web.exception;
 
 
 import com.blandino.demo_park_api.exception.EntityNotFoundException;
+import com.blandino.demo_park_api.exception.NuitUniqueVioletionException;
 import com.blandino.demo_park_api.exception.PasswordInvalidException;
 import com.blandino.demo_park_api.exception.UsernmaeUniqueVioletionException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +28,7 @@ public class ApiExceptionHandler {
 
     }
 
-    @ExceptionHandler(AccessDeniedException.class)
+    @ExceptionHandler(AccessDeniedException.class )
     public ResponseEntity<ErrorMessage> accessDeniedException(AccessDeniedException exception, HttpServletRequest request) {
         return ResponseEntity
                 .status(HttpStatus.FORBIDDEN)
@@ -36,7 +37,7 @@ public class ApiExceptionHandler {
 
     }
 
-    @ExceptionHandler(UsernmaeUniqueVioletionException.class)
+    @ExceptionHandler({UsernmaeUniqueVioletionException.class , NuitUniqueVioletionException.class} )
     public ResponseEntity <ErrorMessage> dataIntegrityViolationException(RuntimeException exception,HttpServletRequest request){
 
         return ResponseEntity
