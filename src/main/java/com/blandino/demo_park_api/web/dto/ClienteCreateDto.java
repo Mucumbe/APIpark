@@ -10,14 +10,13 @@ import lombok.Setter;
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteDto {
+public class ClienteCreateDto {
 
     @NotNull
     @Size(min = 5,max = 50)
     private String nome;
 
     @Size(min =5 ,max =9 )
-
     private String nuit;
 
 }

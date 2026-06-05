@@ -30,7 +30,7 @@ public class Cliente {
     private String nuit ;
 
     @OneToOne
-    @Column(name = "is_usuario", nullable = false)
+    @JoinColumn(name = "is_usuario", nullable = false)
     private  Usuario usuario;
 
     @CreatedDate

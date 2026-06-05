@@ -6,6 +6,7 @@ import com.blandino.demo_park_api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
@@ -13,12 +14,13 @@ public class ClienteService {
 
     private final ClienteRepository repository;
 
-    private Cliente salvar(Cliente cliente){
+    @Transactional
+    public Cliente salvar(Cliente cliente){
 
         try {
             return repository.save(cliente);
         }catch (DataIntegrityViolationException exception){
-            throw new NuitUniqueVioletionException("Nuit '/%' ja cadastrado no sistema"+cliente.getNuit());
+            throw new NuitUniqueVioletionException(String.format("Nuit '%s' ja cadastrado no sistema",cliente.getNuit()));
         }
 
     }
