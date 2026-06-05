@@ -50,7 +50,7 @@ public class UsuarioController {
 
 
     @Operation(summary = "Buscar Usuario", description = "Responsavel procurar um recursos especifico",
-            security = @SecurityRequirement(name = "securiry"),
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucesso",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
@@ -68,7 +68,7 @@ public class UsuarioController {
 
 
     @Operation(summary = "Actualizado senha de um recurso", description = "Actualiza senha de um usuario ja exstente",
-            security = @SecurityRequirement(name = "securiry"),
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204", description = "Senha actualizada"),
                     @ApiResponse(responseCode = "403", description = "Usuario sem permisao para acessar este recurso",
@@ -87,7 +87,7 @@ public class UsuarioController {
 
 
     @Operation(summary = "Listar todos Recursos", description = "Listar todos os recurso cadastrados",
-            security = @SecurityRequirement(name = "securiry"),
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "200", description = "Lista todos Recursos",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
@@ -97,7 +97,7 @@ public class UsuarioController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
-        log.info("Controller GET /usuarios foi chamado");
+
         List<Usuario> usuarios = usuarioService.buscarTodos();
         log.error("Boas na boa" + usuarios.toString());
         return ResponseEntity.ok(UsuarioMapper.toListDto(usuarios));
