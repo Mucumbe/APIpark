@@ -67,6 +67,22 @@ public class AutenticacaoIT {
         org.assertj.core.api.Assertions.assertThat(jwtToken).isNotNull();
         org.assertj.core.api.Assertions.assertThat(jwtToken.getStatus()).isEqualTo(400);
 
+    }
+    @Test
+    public void autenticacao_com_dados_naoValidos422() {
+
+        ErrorMessage jwtToken = testClient
+                .post()
+                .uri("/api/v1/auth")
+                .contentType(MediaType.APPLICATION_JSON)
+                .bodyValue(new UsuarioLoginDto("boaskk.co", "123456789"))
+                .exchange()
+                .expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(jwtToken).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(jwtToken.getStatus()).isEqualTo(422);
 
     }
 }
