@@ -83,5 +83,20 @@ public class ClientesIT {
 
     }
 
+    @Test
+    public void createCliente_comAdmin403(){
+        ErrorMessage errorMessage  =testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .bodyValue(new ClienteCreateDto("Sibone Mucmbe","7483746"))
+                .exchange().expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
 
+        org.assertj.core.api.Assertions.assertThat(errorMessage).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(403);
+
+    }
 }
