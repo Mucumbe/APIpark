@@ -65,4 +65,23 @@ public class ClientesIT {
         org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(409);
 
     }
+
+    @Test
+    public void createCliente_comdadosNaoValidos422(){
+        ErrorMessage errorMessage  =testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"kapa@kk.co","123456789"))
+                .bodyValue(new ClienteCreateDto("We","13"))
+                .exchange().expectStatus().isEqualTo(422)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(errorMessage).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(422);
+
+    }
+
+
 }

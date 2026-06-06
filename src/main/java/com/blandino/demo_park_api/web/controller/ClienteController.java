@@ -39,7 +39,7 @@ public class ClienteController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "422", description = "Recurso nao processado devido a dados de entrada invalidos",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse(responseCode = "403", description = "CLientes so devem ser ciados por seus respectivo user nao Admin"
+            @ApiResponse(responseCode = "403", description = "CLientes so devem ser criados por seus respectivo user nao Admin"
                     , content = @Content(mediaType = "application/json",schema = @Schema(implementation=ErrorMessage.class))
 
             )
