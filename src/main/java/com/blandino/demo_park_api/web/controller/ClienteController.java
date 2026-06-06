@@ -23,7 +23,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-@Tag(name ="Clientes" ,description ="Contem todas as operacoes relativas ao cliente" )
+@Tag(name = "Clientes", description = "Contem todas as operacoes relativas ao cliente")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/clientes")
@@ -40,7 +40,7 @@ public class ClienteController {
             @ApiResponse(responseCode = "422", description = "Recurso nao processado devido a dados de entrada invalidos",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse(responseCode = "403", description = "CLientes so devem ser criados por seus respectivo user nao Admin"
-                    , content = @Content(mediaType = "application/json",schema = @Schema(implementation=ErrorMessage.class))
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
 
             )
     })
@@ -55,11 +55,21 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ClienteMapper.toDto(cliente));
     }
 
+
+    @Operation(summary = "Pesquisa por Id", description = "Responsavel por pesqisar um cliente por id", responses = {
+            @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClienteCreateDto.class))),
+            @ApiResponse(responseCode = "403", description = "somete administradores tem permisao para verificar cliente"
+                    , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse(responseCode = "404", description = "Id Nao encontrado",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+    })
     @GetMapping("/{id}")
     @PreAuthorize("hasRole ('ADMIN')")
-    public ResponseEntity<ClienteResponseDto> getId(@PathVariable Long id){
+    public ResponseEntity<ClienteResponseDto> getId(@PathVariable Long id) {
 
         Cliente cliente = service.obterPorId(id);
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }
 
 }

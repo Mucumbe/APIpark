@@ -99,4 +99,19 @@ public class ClientesIT {
         org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(403);
 
     }
+
+    @Test
+    public void pesquisaIdCliete_Com_Sucesso200(){
+        ClienteResponseDto responseDto =testClient
+                .get()
+                .uri("/api/v1/clientes/1")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .exchange().expectStatus().isOk()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(1);
+
+    }
 }
