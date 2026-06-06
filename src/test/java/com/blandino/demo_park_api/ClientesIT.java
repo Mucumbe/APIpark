@@ -1,0 +1,50 @@
+package com.blandino.demo_park_api;
+
+
+import com.blandino.demo_park_api.entity.Cliente;
+import com.blandino.demo_park_api.web.dto.ClienteCreateDto;
+import com.blandino.demo_park_api.web.dto.ClienteResponseDto;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.web.reactive.server.WebTestClient;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/sql/clientes/clientes-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@Sql(scripts = "/sql/clientes/clientes-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
+public class ClientesIT {
+
+    WebTestClient testClient;
+
+    @LocalServerPort
+    int port;
+
+    @BeforeEach
+    void setUp(){
+        this.testClient=WebTestClient.bindToServer()
+                .baseUrl("http://localhost:"+port)
+                .build();
+    }
+
+    @Test
+    public void createCliente_comdadosValidos(){
+        ClienteResponseDto clienteResponseDto=testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"kapa@kk.co","123456789"))
+                .bodyValue(new ClienteCreateDto("Wendy Mucumbe","7654321"))
+                .exchange().expectStatus().isCreated()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(clienteResponseDto).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getId()).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getNome()).isEqualTo("Wendy Mucumbe");
+        org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getNuit()).isEqualTo("7654321");
+
+    }
+}
