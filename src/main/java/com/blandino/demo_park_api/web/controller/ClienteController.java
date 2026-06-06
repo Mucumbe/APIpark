@@ -56,8 +56,8 @@ public class ClienteController {
     }
 
 
-    @Operation(summary = "Pesquisa por Id", description = "Responsavel por pesqisar um cliente por id", responses = {
-            @ApiResponse(responseCode = "200", description = "Recurso criado com sucesso",
+    @Operation(summary = "Pesquisa por Id", description = "Responsavel por pesquisar um cliente por id", responses = {
+            @ApiResponse(responseCode = "200", description = "Recurso pesquisado com sucesso",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClienteCreateDto.class))),
             @ApiResponse(responseCode = "403", description = "somete administradores tem permisao para verificar cliente"
                     , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),

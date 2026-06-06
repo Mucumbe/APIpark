@@ -114,4 +114,34 @@ public class ClientesIT {
         org.assertj.core.api.Assertions.assertThat(responseDto.getId()).isEqualTo(1);
 
     }
+    @Test
+    public void pesquisaIdCliebte_semPermisao403(){
+        ErrorMessage errorMessage  =testClient
+                .get()
+                .uri("/api/v1/clientes/1")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"bland@kk.co","123456789"))
+                .exchange().expectStatus().isEqualTo(403)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(errorMessage).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(403);
+
+    }
+
+    @Test
+    public void pesquisaIdCliebte_NaoCadastrado404(){
+        ErrorMessage errorMessage  =testClient
+                .get()
+                .uri("/api/v1/clientes/3")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .exchange().expectStatus().isEqualTo(404)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(errorMessage).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(404);
+
+    }
+
 }
