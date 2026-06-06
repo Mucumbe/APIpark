@@ -55,4 +55,11 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.CREATED).body(ClienteMapper.toDto(cliente));
     }
 
+    @GetMapping("/{id}")
+    @PreAuthorize("hasRole ('ADMIN')")
+    public ResponseEntity<ClienteResponseDto> getId(@PathVariable Long id){
+
+        Cliente cliente = service.obterPorId(id);
+    }
+
 }

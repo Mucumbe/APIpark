@@ -1,6 +1,7 @@
 package com.blandino.demo_park_api.service;
 
 import com.blandino.demo_park_api.entity.Cliente;
+import com.blandino.demo_park_api.exception.EntityNotFoundException;
 import com.blandino.demo_park_api.exception.NuitUniqueVioletionException;
 import com.blandino.demo_park_api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,5 +26,10 @@ public class ClienteService {
 
     }
 
-
+@Transactional(readOnly = true)
+    public Cliente obterPorId(Long id) {
+        return repository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("ID:%s nao emcontrado",id))
+        );
+    }
 }

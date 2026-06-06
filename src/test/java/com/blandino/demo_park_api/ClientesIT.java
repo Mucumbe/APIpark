@@ -90,7 +90,7 @@ public class ClientesIT {
                 .uri("/api/v1/clientes")
                 .contentType(MediaType.APPLICATION_JSON)
                 .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
-                .bodyValue(new ClienteCreateDto("Sibone Mucmbe","7483746"))
+                .bodyValue(new ClienteCreateDto("Sibone Mucumbe","7483746"))
                 .exchange().expectStatus().isEqualTo(403)
                 .expectBody(ErrorMessage.class)
                 .returnResult().getResponseBody();
