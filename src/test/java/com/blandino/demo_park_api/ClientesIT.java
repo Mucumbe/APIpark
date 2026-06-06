@@ -4,6 +4,7 @@ package com.blandino.demo_park_api;
 import com.blandino.demo_park_api.entity.Cliente;
 import com.blandino.demo_park_api.web.dto.ClienteCreateDto;
 import com.blandino.demo_park_api.web.dto.ClienteResponseDto;
+import com.blandino.demo_park_api.web.exception.ErrorMessage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -45,6 +46,23 @@ public class ClientesIT {
         org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getId()).isNotNull();
         org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getNome()).isEqualTo("Wendy Mucumbe");
         org.assertj.core.api.Assertions.assertThat(clienteResponseDto.getNuit()).isEqualTo("7654321");
+
+    }
+
+    @Test
+    public void createCliente_comdadosNaoValidos409(){
+        ErrorMessage errorMessage  =testClient
+                .post()
+                .uri("/api/v1/clientes")
+                .contentType(MediaType.APPLICATION_JSON)
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"kapa@kk.co","123456789"))
+                .bodyValue(new ClienteCreateDto("Wendy Mucumbe","1334567"))
+                .exchange().expectStatus().isEqualTo(409)
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(errorMessage).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(errorMessage.getStatus()).isEqualTo(409);
 
     }
 }
