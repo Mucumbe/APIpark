@@ -2,12 +2,15 @@ package com.blandino.demo_park_api.web.controller;
 
 import com.blandino.demo_park_api.entity.Cliente;
 import com.blandino.demo_park_api.jwt.JwtUserDetails;
+import com.blandino.demo_park_api.repository.projection.ClienteProjection;
 import com.blandino.demo_park_api.service.ClienteService;
 import com.blandino.demo_park_api.service.UsuarioService;
 import com.blandino.demo_park_api.web.dto.ClienteCreateDto;
 import com.blandino.demo_park_api.web.dto.ClienteResponseDto;
+import com.blandino.demo_park_api.web.dto.PageableDto;
 import com.blandino.demo_park_api.web.dto.UsuarioCreateDto;
 import com.blandino.demo_park_api.web.dto.mapper.ClienteMapper;
+import com.blandino.demo_park_api.web.dto.mapper.PageableMapper;
 import com.blandino.demo_park_api.web.exception.ErrorMessage;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -78,9 +81,10 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasRole ('ADMIN')")
-    public  ResponseEntity<Page<Cliente>> getAll(Pageable pageable){
-        Page<Cliente> clientes= service.buscarTodos(pageable);
-        return ResponseEntity.ok(clientes);
+    public  ResponseEntity<PageableDto> getAll(Pageable pageable){
+        Page<ClienteProjection> clientes= service.buscarTodos(pageable);
+
+        return ResponseEntity.ok(PageableMapper.toDto(clientes));
     }
 
 
