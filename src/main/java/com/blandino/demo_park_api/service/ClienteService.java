@@ -6,6 +6,8 @@ import com.blandino.demo_park_api.exception.NuitUniqueVioletionException;
 import com.blandino.demo_park_api.repository.ClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,8 +38,7 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public List<Cliente> buscarTodos() {
-
-        return repository.findAll();
+    public Page<Cliente> buscarTodos(Pageable pageable) {
+        return repository.findAll(pageable);
     }
 }

@@ -17,6 +17,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.internal.bytebuddy.implementation.Implementation;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -76,8 +78,8 @@ public class ClienteController {
 
     @GetMapping
     @PreAuthorize("hasRole ('ADMIN')")
-    public  ResponseEntity<List<Cliente>> getAll(){
-        List<Cliente> clientes= service.buscarTodos();
+    public  ResponseEntity<Page<Cliente>> getAll(Pageable pageable){
+        Page<Cliente> clientes= service.buscarTodos(pageable);
         return ResponseEntity.ok(clientes);
     }
 
