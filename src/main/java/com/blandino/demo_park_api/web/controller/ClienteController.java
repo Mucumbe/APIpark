@@ -23,6 +23,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "Clientes", description = "Contem todas as operacoes relativas ao cliente")
 @RequiredArgsConstructor
 @RestController
@@ -71,5 +73,14 @@ public class ClienteController {
         Cliente cliente = service.obterPorId(id);
         return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }
+
+    @GetMapping
+    @PreAuthorize("hasRole ('ADMIN')")
+    public  ResponseEntity<List<Cliente>> getAll(){
+        List<Cliente> clientes= service.buscarTodos();
+        return ResponseEntity.ok(clientes);
+    }
+
+
 
 }

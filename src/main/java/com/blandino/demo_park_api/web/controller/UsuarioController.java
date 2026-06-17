@@ -97,7 +97,6 @@ public class UsuarioController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<UsuarioResponseDto>> getAll() {
-
         List<Usuario> usuarios = usuarioService.buscarTodos();
         log.error("Boas na boa" + usuarios.toString());
         return ResponseEntity.ok(UsuarioMapper.toListDto(usuarios));
