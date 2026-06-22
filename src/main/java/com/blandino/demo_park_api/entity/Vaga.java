@@ -32,7 +32,7 @@ public class Vaga {
     private StatusVaga status;
 
     public enum StatusVaga{
-        LIVRE, OCUPADO
+        LIVRE, OCUPADA
     }
 
     @CreatedDate
