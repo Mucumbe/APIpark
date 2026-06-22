@@ -13,7 +13,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UsuarioSenhaDTO {
-
     @NotBlank
     @Size(min = 8)
     private String actual;
