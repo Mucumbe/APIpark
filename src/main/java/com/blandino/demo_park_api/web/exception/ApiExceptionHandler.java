@@ -1,10 +1,7 @@
 package com.blandino.demo_park_api.web.exception;
 
 
-import com.blandino.demo_park_api.exception.EntityNotFoundException;
-import com.blandino.demo_park_api.exception.NuitUniqueVioletionException;
-import com.blandino.demo_park_api.exception.PasswordInvalidException;
-import com.blandino.demo_park_api.exception.UsernmaeUniqueVioletionException;
+import com.blandino.demo_park_api.exception.*;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,7 +34,7 @@ public class ApiExceptionHandler {
 
     }
 
-    @ExceptionHandler({UsernmaeUniqueVioletionException.class , NuitUniqueVioletionException.class} )
+    @ExceptionHandler({UsernmaeUniqueVioletionException.class , NuitUniqueVioletionException.class, CodigoUniqueViolationException.class} )
     public ResponseEntity <ErrorMessage> dataIntegrityViolationException(RuntimeException exception,HttpServletRequest request){
 
         return ResponseEntity
