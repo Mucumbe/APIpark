@@ -1,7 +1,6 @@
 package com.blandino.demo_park_api;
 
 
-import com.blandino.demo_park_api.entity.Cliente;
 import com.blandino.demo_park_api.web.dto.ClienteCreateDto;
 import com.blandino.demo_park_api.web.dto.ClienteResponseDto;
 import com.blandino.demo_park_api.web.dto.PageableDto;
@@ -10,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -182,6 +180,38 @@ public class ClientesIT {
                 .get()
                 .uri("/api/v1/clientes")
                 .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient, "nada@kk.co", "123456789"))
+                .exchange().expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
+
+    }
+
+
+    @Test
+    public void pesquisarClientes_ComDadosDeUsuario_ComSucesso200() {
+        ClienteResponseDto responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/detalhes")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient, "nada@kk.co", "123456789"))
+                .exchange().expectStatus().isOk()
+                .expectBody(ClienteResponseDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getNuit()).isEqualTo("2468101");
+        org.assertj.core.api.Assertions.assertThat(responseBody.getNome()).isEqualTo("Mauro Mondlane");
+
+    }
+
+    @Test
+    public void pesquisarClientes_ComDadosDeUsuario_SemSucesso403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes/detalhes")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient, "boas@kk.co", "123456789"))
                 .exchange().expectStatus().isForbidden()
                 .expectBody(ErrorMessage.class)
                 .returnResult().getResponseBody();
