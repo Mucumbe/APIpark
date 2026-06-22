@@ -21,25 +21,27 @@ public class ClienteService {
     private final ClienteRepository repository;
 
     @Transactional
-    public Cliente salvar(Cliente cliente){
+    public Cliente salvar(Cliente cliente) {
 
         try {
             return repository.save(cliente);
-        }catch (DataIntegrityViolationException exception){
-            throw new NuitUniqueVioletionException(String.format("Nuit '%s' ja cadastrado no sistema",cliente.getNuit()));
+        } catch (DataIntegrityViolationException exception) {
+            throw new NuitUniqueVioletionException(String.format("Nuit '%s' ja cadastrado no sistema", cliente.getNuit()));
         }
 
     }
 
-@Transactional(readOnly = true)
+    @Transactional(readOnly = true)
     public Cliente obterPorId(Long id) {
         return repository.findById(id).orElseThrow(
-                () -> new EntityNotFoundException(String.format("ID:%s nao emcontrado",id))
+                () -> new EntityNotFoundException(String.format("ID:%s nao emcontrado", id))
         );
     }
 
     @Transactional(readOnly = true)
     public Page<ClienteProjection> buscarTodos(Pageable pageable) {
-        return repository.findAllpageable(pageable);
+
+        return repository.findAllpageable(pageable)
+                ;
     }
 }
