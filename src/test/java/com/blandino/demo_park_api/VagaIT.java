@@ -76,5 +76,33 @@ public void criarVaga_comDadosValidos_retornadoLocationSatus201(){
                 .jsonPath("path").isEqualTo("/api/v1/vagas");
     }
 
+    @Test
+    public void obtendoDadosDeUmaVaga_Especifica201(){
+
+        testClient.get()
+                .uri("api/v1/vagas/{codigo}","A-05")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("id").isEqualTo(2)
+                .jsonPath("codigo").isEqualTo("A-05")
+                .jsonPath("status").isEqualTo("LIVRE");
+    }
+
+    @Test
+    public void obtendoDadosDeUmaVaga_iNEXISTEMTE_Statua404(){
+
+        testClient.get()
+                .uri("api/v1/vagas/{codigo}","A-19")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient,"boas@kk.co","123456789"))
+                .exchange()
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo(404)
+                .jsonPath("method").isEqualTo("GET")
+                .jsonPath("path").isEqualTo("/api/v1/vagas/A-19");
+    }
+
 
 }

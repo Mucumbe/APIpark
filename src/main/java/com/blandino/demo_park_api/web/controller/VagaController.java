@@ -59,7 +59,7 @@ public class VagaController {
             responses = {
                     @ApiResponse(responseCode = "200", description = "Recurso encontrado com sucessi",
                             headers = @Header(name = HttpHeaders.LOCATION, description = "Retorna url de novo cadastro")),
-                    @ApiResponse(responseCode = "40", description = "Vaga Ja cadastrado no sistema",
+                    @ApiResponse(responseCode = "404", description = "Vaga nao encontrada no sistema",
                             content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
                     @ApiResponse(responseCode = "403", description = "Vagas so devem ser criados por Administradores"
                             , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))
