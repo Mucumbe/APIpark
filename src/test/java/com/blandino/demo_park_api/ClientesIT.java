@@ -10,6 +10,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -172,6 +173,21 @@ public class ClientesIT {
         org.assertj.core.api.Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);
         org.assertj.core.api.Assertions.assertThat(responseBody.getNumber()).isEqualTo(1);
         org.assertj.core.api.Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2);
+
+    }
+
+    @Test
+    public void pesquisarClientes_ComPaginacao_SemSUCesso403() {
+        ErrorMessage responseBody = testClient
+                .get()
+                .uri("/api/v1/clientes")
+                .headers(JwtAuthentication.getHttpHeadersAuthorization(testClient, "nada@kk.co", "123456789"))
+                .exchange().expectStatus().isForbidden()
+                .expectBody(ErrorMessage.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
 
     }
 
