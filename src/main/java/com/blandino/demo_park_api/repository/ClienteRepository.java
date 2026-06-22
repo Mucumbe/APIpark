@@ -12,4 +12,6 @@ public interface ClienteRepository extends JpaRepository<Cliente,Long> {
 
     @Query("select c from Cliente c")
     Page<ClienteProjection> findAllpageable(Pageable pageable);
+
+    Cliente findByUsuarioId(Long id);
 }

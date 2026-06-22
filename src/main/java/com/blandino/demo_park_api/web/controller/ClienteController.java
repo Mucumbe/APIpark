@@ -108,10 +108,25 @@ public class ClienteController {
             })
     @GetMapping
     @PreAuthorize("hasRole ('ADMIN')")
-    public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true) @PageableDefault(size = 5,sort ={"nome"} ) Pageable pageable) {
+    public ResponseEntity<PageableDto> getAll(@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
         Page<ClienteProjection> clientes = service.buscarTodos(pageable);
 
         return ResponseEntity.ok(PageableMapper.toDto(clientes));
+    }
+
+    @Operation(summary = "Pesquisa por Id do Usuario", description = "Responsavel por pesquisar um cliente por id do usuario",
+            security = @SecurityRequirement(name = "security"),
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Recurso pesquisado com sucesso",
+                            content = @Content(mediaType = "application/json", schema = @Schema(implementation = ClienteCreateDto.class))),
+                    @ApiResponse(responseCode = "403", description = "Somente Clientes tem permisao a este recurso"
+                            , content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))
+            })
+    @GetMapping("/detalhes")
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity<ClienteResponseDto> getByUserId(@AuthenticationPrincipal JwtUserDetails jwtUserDetails) {
+        Cliente cliente = service.obterPorIdUser(jwtUserDetails.getId());
+        return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }
 
 
